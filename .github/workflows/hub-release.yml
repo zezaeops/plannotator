@@ -38,8 +38,6 @@ jobs:
           name: binaries
       - uses: softprops/action-gh-release@v2
         with:
-          files: |
-            plannotator-*
-            *.sha256
+          files: plannotator-*
           generate_release_notes: true
           prerelease: true
