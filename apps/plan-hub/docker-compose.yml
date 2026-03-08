@@ -1,0 +1,17 @@
+services:
+  plan-hub:
+    build:
+      context: ../..
+      dockerfile: apps/plan-hub/Dockerfile
+    ports:
+      - "19434:19434"
+    volumes:
+      - hub-data:/data
+    environment:
+      - PLANNOTATOR_HUB_TOKEN=${PLANNOTATOR_HUB_TOKEN}
+      - HUB_PORT=19434
+      - HUB_DB_PATH=/data/hub.sqlite
+    restart: unless-stopped
+
+volumes:
+  hub-data:

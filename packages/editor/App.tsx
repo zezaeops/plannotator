@@ -414,6 +414,7 @@ const App: React.FC = () => {
   const [planDiffMode, setPlanDiffMode] = useState<PlanDiffMode>('clean');
   const [previousPlan, setPreviousPlan] = useState<string | null>(null);
   const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+  const [updateCheckUrl, setUpdateCheckUrl] = useState<string | undefined>(undefined);
 
   const viewerRef = useRef<ViewerHandle>(null);
   const containerRef = useRef<HTMLElement>(null);
@@ -624,7 +625,7 @@ const App: React.FC = () => {
         if (!res.ok) throw new Error('Not in API mode');
         return res.json();
       })
-      .then((data: { plan: string; origin?: 'claude-code' | 'opencode' | 'pi'; mode?: 'annotate'; sharingEnabled?: boolean; shareBaseUrl?: string; pasteApiUrl?: string; repoInfo?: { display: string; branch?: string }; previousPlan?: string | null; versionInfo?: { version: number; totalVersions: number; project: string } }) => {
+      .then((data: { plan: string; origin?: 'claude-code' | 'opencode' | 'pi'; mode?: 'annotate'; sharingEnabled?: boolean; shareBaseUrl?: string; pasteApiUrl?: string; repoInfo?: { display: string; branch?: string }; previousPlan?: string | null; versionInfo?: { version: number; totalVersions: number; project: string }; updateCheckUrl?: string }) => {
         if (data.plan) setMarkdown(data.plan);
         setIsApiMode(true);
         if (data.mode === 'annotate') {
@@ -648,6 +649,9 @@ const App: React.FC = () => {
         }
         if (data.versionInfo) {
           setVersionInfo(data.versionInfo);
+        }
+        if (data.updateCheckUrl) {
+          setUpdateCheckUrl(data.updateCheckUrl);
         }
         if (data.origin) {
           setOrigin(data.origin);
@@ -1618,7 +1622,7 @@ const App: React.FC = () => {
         />
 
         {/* Update notification */}
-        <UpdateBanner origin={origin} />
+        <UpdateBanner origin={origin} updateCheckUrl={updateCheckUrl} />
 
         {/* Image Annotator for pasted images */}
         <ImageAnnotator

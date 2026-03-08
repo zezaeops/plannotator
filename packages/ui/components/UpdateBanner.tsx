@@ -5,10 +5,11 @@ const INSTALL_COMMAND = 'curl -fsSL https://plannotator.ai/install.sh | bash';
 
 interface UpdateBannerProps {
   origin?: 'claude-code' | 'opencode' | 'pi' | null;
+  updateCheckUrl?: string;
 }
 
-export const UpdateBanner: React.FC<UpdateBannerProps> = ({ origin }) => {
-  const updateInfo = useUpdateCheck();
+export const UpdateBanner: React.FC<UpdateBannerProps> = ({ origin, updateCheckUrl }) => {
+  const updateInfo = useUpdateCheck(updateCheckUrl);
   const [copied, setCopied] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 

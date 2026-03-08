@@ -19,6 +19,9 @@
     "dev:portal": "bun run --cwd apps/portal dev",
     "dev:marketing": "bun run --cwd apps/marketing dev",
     "dev:review": "bun run --cwd apps/review dev",
+    "dev:hub": "bun run --cwd apps/plan-hub dev",
+    "dev:hub-ui": "bun run --cwd apps/plan-hub dev:dashboard",
+    "build:hub": "bun run --cwd apps/plan-hub build:dashboard",
     "build:hook": "bun run --cwd apps/hook build",
     "build:portal": "bun run --cwd apps/portal build",
     "build:marketing": "bun run --cwd apps/marketing build",
@@ -36,6 +39,7 @@
     "diff": "^8.0.3"
   },
   "devDependencies": {
+    "@types/bun": "^1.3.10",
     "happy-dom": "^20.5.0"
   }
 }

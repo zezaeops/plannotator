@@ -283,3 +283,38 @@ export function listProjectPlans(
     return [];
   }
 }
+
+// --- Hub Sync ---
+
+/**
+ * Sync a plan version to the remote Plan Hub server.
+ * Fire-and-forget: errors are silently swallowed to never affect local operation.
+ * Only activates when PLANNOTATOR_HUB_URL environment variable is set.
+ */
+export async function syncToHub(params: {
+  project: string;
+  slug: string;
+  version: number;
+  content: string;
+}): Promise<void> {
+  const hubUrl = process.env.PLANNOTATOR_HUB_URL;
+  const hubToken = process.env.PLANNOTATOR_HUB_TOKEN;
+  if (!hubUrl) return;
+
+  try {
+    await fetch(`${hubUrl}/api/sync`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(hubToken ? { Authorization: `Bearer ${hubToken}` } : {}),
+      },
+      body: JSON.stringify({
+        ...params,
+        author: process.env.USER ?? process.env.USERNAME ?? "unknown",
+        syncedAt: new Date().toISOString(),
+      }),
+    });
+  } catch {
+    // Silently fail — never block local plan saving
+  }
+}

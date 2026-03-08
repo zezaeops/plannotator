@@ -25,6 +25,7 @@ import {
   saveAnnotations,
   saveFinalSnapshot,
   saveToHistory,
+  syncToHub,
   getPlanVersion,
   getPlanVersionPath,
   getVersionCount,
@@ -121,6 +122,9 @@ export async function startPlannotatorServer(
   // Version history: save plan and detect previous version
   const project = (await detectProjectName()) ?? "_unknown";
   const historyResult = saveToHistory(project, slug, plan);
+  if (historyResult.isNew) {
+    syncToHub({ project, slug, version: historyResult.version, content: plan }).catch(() => {});
+  }
   const currentPlanPath = historyResult.path;
   const previousPlan =
     historyResult.version > 1
@@ -132,6 +136,7 @@ export async function startPlannotatorServer(
     project,
   };
 
+  const updateCheckUrl = process.env.PLANNOTATOR_UPDATE_CHECK_URL || undefined;
 
   // Decision promise
   let resolveDecision: (result: {
@@ -198,7 +203,7 @@ export async function startPlannotatorServer(
 
           // API: Get plan content
           if (url.pathname === "/api/plan") {
-            return Response.json({ plan, origin, permissionMode, sharingEnabled, shareBaseUrl, pasteApiUrl, repoInfo, previousPlan, versionInfo });
+            return Response.json({ plan, origin, permissionMode, sharingEnabled, shareBaseUrl, pasteApiUrl, repoInfo, previousPlan, versionInfo, updateCheckUrl });
           }
 
           // API: Serve a linked markdown document

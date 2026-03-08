@@ -39,7 +39,7 @@ function compareVersions(current: string, latest: string): boolean {
   return false;
 }
 
-export function useUpdateCheck(): UpdateInfo | null {
+export function useUpdateCheck(customApiUrl?: string): UpdateInfo | null {
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
 
   useEffect(() => {
@@ -65,7 +65,8 @@ export function useUpdateCheck(): UpdateInfo | null {
           return;
         }
 
-        const response = await fetch(GITHUB_API);
+        const apiUrl = customApiUrl || GITHUB_API;
+        const response = await fetch(apiUrl);
         if (!response.ok) return;
 
         const release = await response.json();
@@ -91,7 +92,7 @@ export function useUpdateCheck(): UpdateInfo | null {
     };
 
     checkForUpdates();
-  }, []);
+  }, [customApiUrl]);
 
   return updateInfo;
 }
