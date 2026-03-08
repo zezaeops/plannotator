@@ -1,0 +1,45 @@
+name: Release (Fork)
+
+on:
+  push:
+    tags: ['v*-hub.*']
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun run build:review && bun run build:hook
+      - name: Cross-compile binaries
+        run: |
+          for target in bun-darwin-arm64 bun-darwin-x64 bun-linux-x64 bun-linux-arm64; do
+            name="plannotator-${target#bun-}"
+            bun build apps/hook/server/index.ts --compile --target=$target --outfile=$name
+            shasum -a 256 $name > $name.sha256
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: |
+            plannotator-*
+            *.sha256
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: binaries
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            plannotator-*
+            *.sha256
+          generate_release_notes: true
+          prerelease: true

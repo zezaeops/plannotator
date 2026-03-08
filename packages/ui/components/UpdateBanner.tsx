@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useUpdateCheck } from '../hooks/useUpdateCheck';
 
-const INSTALL_COMMAND = 'curl -fsSL https://plannotator.ai/install.sh | bash';
+const INSTALL_COMMAND = 'curl -fsSL https://raw.githubusercontent.com/zezaeops/plannotator/plan-hub/scripts/install-hub.sh | bash';
 
 interface UpdateBannerProps {
   origin?: 'claude-code' | 'opencode' | 'pi' | null;

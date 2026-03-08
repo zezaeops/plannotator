@@ -10,6 +10,12 @@ const token = process.env.PLANNOTATOR_HUB_TOKEN || undefined;
 
 const db = initDatabase(dbPath);
 
+// Allow overriding fork_version via environment variable (e.g. from CI/CD tags)
+const hubVersion = process.env.HUB_VERSION;
+if (hubVersion) {
+  db.run("INSERT OR REPLACE INTO settings (key, value) VALUES ('fork_version', ?)", [hubVersion]);
+}
+
 Bun.serve({
   port,
   async fetch(req) {

@@ -144,7 +144,7 @@ export async function handleRequest(
     const forkVersion = getVersionSetting(db);
     return json({
       tag_name: `v${forkVersion}`,
-      html_url: `https://github.com/fallcent/plannotator/releases/tag/v${forkVersion}`,
+      html_url: `https://github.com/zezaeops/plannotator/releases/tag/v${forkVersion}`,
       body: `Plan Hub version ${forkVersion}`,
     });
   }

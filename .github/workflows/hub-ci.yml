@@ -1,0 +1,15 @@
+name: Plan Hub CI
+
+on:
+  pull_request:
+    branches: [plan-hub]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+      - run: bun test apps/plan-hub/src/index.test.ts
+      - run: bun run build:hub
