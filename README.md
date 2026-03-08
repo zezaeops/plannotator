@@ -1,8 +1,59 @@
+# Plannotator (zezaeops fork)
+
+> **Plan Hub** — A central server that automatically syncs plans created by local plannotator instances, with a dashboard where your entire team can browse, diff, and comment on plans.
+
+This fork extends [backnotprop/plannotator](https://github.com/backnotprop/plannotator) with Plan Hub, a self-hosted team collaboration layer. Local plannotator behavior is 100% preserved — Hub sync only activates when `PLANNOTATOR_HUB_URL` is set.
+
+## Install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/zezaeops/plannotator/plan-hub/scripts/install-hub.sh | bash
+```
+
+Then in Claude Code:
+```
+/plugin marketplace add zezaeops/plannotator
+/plugin install plannotator@plannotator
+
+# IMPORTANT: Restart Claude Code after plugin install
+```
+
+## Plan Hub Setup
+
+Set these environment variables so local plannotator auto-syncs plans to the Hub server:
+
+```bash
+export PLANNOTATOR_HUB_URL=https://your-hub-server:19434
+export PLANNOTATOR_HUB_TOKEN=your-team-secret
+export PLANNOTATOR_UPDATE_CHECK_URL=https://your-hub-server:19434/api/version
+```
+
+## Deploy the Hub Server
+
+```bash
+cd apps/plan-hub
+echo "PLANNOTATOR_HUB_TOKEN=your-team-secret" > .env
+docker compose up -d
+```
+
+The dashboard is available at `http://localhost:19434`.
+
+## Branch Strategy
+
+| Branch | Purpose |
+|--------|---------|
+| `plan-hub` | Default branch for fork development and deployment |
+| `main` | Upstream sync only |
+
+Sync upstream changes: `git fetch upstream && git checkout main && git merge upstream/main && git checkout plan-hub && git merge main`
+
+---
+
 <p align="center">
   <img src="apps/marketing/public/og-image.webp" alt="Plannotator" width="80%" />
 </p>
 
-# Plannotator
+# Plannotator (upstream)
 
 Interactive Plan Review for AI Coding Agents. Mark up and refine your plans using a visual UI, share for team collaboration, and seamlessly integrate with **Claude Code**, **OpenCode**, and **Pi**.
 
